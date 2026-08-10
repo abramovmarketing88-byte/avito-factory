@@ -1,5 +1,8 @@
 # Этап 7: Экспорт CSV для Авито
 
+> Если нужна **автозагрузка Excel** — см. также [13-autoload-xlsx.md](13-autoload-xlsx.md).  
+> CSV часто делают параллельно как дубль Title/Description/Address.
+
 ## Формат файла
 
 Эталон: `templates/csv-header.csv` и `templates/avito-bulk-upload-example.csv`
@@ -60,7 +63,8 @@ Title,Description,Address
 
 ## Именование файла
 
-`output/avito-ads-{slug}-{YYYY-MM-DD}.csv`
+`output/feeds/avito-ads-{slug}-{YYYY-MM-DD}.csv`  
+(допустимо и `output/avito-ads-…` в простых проектах)
 
 ## Для 50+ строк
 
