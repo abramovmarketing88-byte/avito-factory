@@ -1,13 +1,12 @@
 ---
 name: avito-factory
 description: >-
-  Полный пайплайн массовых объявлений для Авито: бриф → (опц.) конкурентный
-  парсинг выдачи → ЦА → title/офферы → объявления → аудит → спинтекст → CSV и/или
-  XLSX автозагрузки. Отдельные категории (кухни / шкафы-купе), уникализация
-  моделями, когортные цены, гео МСК+МО, выгрузка через Avito API. Пресет
-  Татарстан 200. Use when user says avito factory, /avito-factory, автозагрузка
-  Авито, массовая генерация объявлений, спинтекст, CSV/XLSX для Авито, парсинг
-  конкурентов Авито, Мебель Алирис, 1000/2000 объявлений.
+  Полный пайплайн массовых объявлений для Авито (любая ниша): бриф → (опц.)
+  парсинг выдачи → ЦА → title/офферы → объявления → аудит → спинтекст → CSV
+  и/или XLSX автозагрузки. Товары и услуги, multi-category, когортные цены,
+  гео по брифу, Avito API. Use when avito factory, /avito-factory, автозагрузка
+  Авито, массовая генерация объявлений, спинтекст, CSV/XLSX, services feed,
+  PriceList, 50/200/1000 объявлений.
 disable-model-invocation: true
 ---
 
@@ -25,11 +24,13 @@ disable-model-invocation: true
 
 1. Прочитай бриф + карту проекта (`README.md` в корне, если есть).
 2. Создай `output/session-{slug}.md` из [templates/session-state.md](templates/session-state.md).
-3. Если категорий ≥2 (кухни + шкафы) — веди **отдельные треки** research/copy или явные секции в session.
+3. Если категорий ≥2 (или кластеров title) — веди **отдельные треки** research/copy или явные секции в session.
 4. Пройди этапы 0→7 (и 0.5 research при масштабе 200+). На чекпоинтах жди подтверждения.
 5. Отдай файл(ы) + краткий отчёт (кол-во, цены, адреса, антидетект).
 
-**Slug** — транслит услуги, lowercase, через дефис (`mebel-aliris`, `kuhni-moskva`).
+**Slug** — транслит ниши/бренда, lowercase, через дефис (`{brand}-{geo}`, `uslugi-moscow`).
+
+**Тип фида:** уточни в брифе — **товары** (листы «Мебель…») или **услуги** («Предложение услуг», PriceList) → [16-services-xlsx.md](references/16-services-xlsx.md).
 
 ---
 
@@ -84,7 +85,7 @@ scripts/         ← генераторы
 | 4 | Аудит 12 уровней | [06-audit-fix.md](references/06-audit-fix.md) |
 | 5 | Спинтекст | [07-spintax.md](references/07-spintax.md) |
 | 6 | Масштаб + уникализация | [14-uniquification.md](references/14-uniquification.md) |
-| 7 | CSV и/или XLSX автозагрузки | [08-csv-export.md](references/08-csv-export.md) + [13-autoload-xlsx.md](references/13-autoload-xlsx.md) |
+| 7 | CSV и/или XLSX автозагрузки | [08-csv-export.md](references/08-csv-export.md) + [13-autoload-xlsx.md](references/13-autoload-xlsx.md) + **услуги:** [16-services-xlsx.md](references/16-services-xlsx.md) |
 | 8 | Фото | [09-image-reverse.md](references/09-image-reverse.md) |
 | — | Выгрузка объявлений через API | [15-avito-api-export.md](references/15-avito-api-export.md) |
 | — | Экспорт переписки | [10-chat-export-brief.md](references/10-chat-export-brief.md) |
@@ -97,14 +98,15 @@ scripts/         ← генераторы
 Прочитай [01-brief-intake.md](references/01-brief-intake.md).
 
 Дополнительно спроси / зафиксируй (пакетно):
-- Категории Авито **отдельно** (кухни / шкафы-купе / …) и целевое N на каждую
+- Категории Авито **отдельно** (кластеры title / листы xlsx) и целевое N на каждую
+- **Товары vs услуги** — шаблон xlsx и PriceList (услуги)
 - Формат выдачи: CSV / **XLSX автозагрузки** / оба
 - Длина Description (часто **300–400** символов plain)
 - Антидетект vs соседний аккаунт (запрещённые фразы/эмодзи-шапки)
 - Телефон, бренд в карточке, оставлять ли старые AvitoId
 - Нужен ли парсинг конкурентов (этап 0.5)
 - `client_id` / `client_secret` Авито API — только для выгрузки/отчётов, **не коммитить в git**
-- Цены: коридор рынка ₽/п.м. **и/или** когортный разброс (100…100000)
+- Цены: коридор из research (₽/п.м., «за услугу», фикс. сумма) **и/или** когортный разброс
 - Гео: список адресов или правило (напр. Москва + ~20 км МКАД)
 
 Не начинай этап 1 без: услуга, регион, количество (или сплит по категориям).
@@ -115,7 +117,7 @@ scripts/         ← генераторы
 
 Прочитай [12-competitor-research.md](references/12-competitor-research.md).
 
-**Правило:** кухни и шкафы-купе (и любая другая категория) — **отдельные** папки research и отдельные выводы по title.
+**Правило:** каждый кластер/категория (кухни, шкафы, услуга X…) — **отдельные** папки research и отдельные выводы по title.
 
 Выход:
 - `output/research/{category}-{geo}/` — methodology, competitor-analysis, popular keywords, titles, stats.json, README
@@ -176,7 +178,7 @@ scripts/         ← генераторы
 - **Модельные серии** (Кухня «Елена», шкаф-купе «Норд»…) — банк 80–120+ имён
 - Разные характеристики (форма, створки, материал)
 - **Разные адреса** (десятки–сотни по гео-правилу)
-- **Цены:** ~50% в рыночном коридоре ₽/п.м. (из research) + хвосты для когорт Авито (низ/верх, вплоть до 100…100000 если просил пользователь)
+- **Цены:** ~50% в рыночном коридоре (из research) + хвосты для когорт Авито (низ/верх по брифу)
 - Уникальные Title (проверка коллизий) и Description (hash)
 
 Категории в **разных листах** xlsx / отдельных генерациях.
@@ -186,7 +188,7 @@ scripts/         ← генераторы
 ## Этап 7: CSV и/или XLSX автозагрузки
 
 - CSV: [08-csv-export.md](references/08-csv-export.md)
-- XLSX: [13-autoload-xlsx.md](references/13-autoload-xlsx.md) — данные с **5-й строки**, не трогать строки 1–4 шаблона; `За что цена` = за погонный метр когда так в рынке; статус Активно; телефон/компания из брифа
+- XLSX: [13-autoload-xlsx.md](references/13-autoload-xlsx.md) — данные с **5-й строки**; маппинг колонок по **row 2** шаблона; услуги → [16-services-xlsx.md](references/16-services-xlsx.md); статус/телефон/компания из брифа
 
 Перед выдачей сверь фид с research/canvas (title-формула, дыры, CTA, коридор цен).
 
@@ -204,12 +206,7 @@ scripts/         ← генераторы
 
 Если пользователь дал `client_id` / `client_secret`:
 
-Прочитай [15-avito-api-export.md](references/15-avito-api-export.md).
-
-- Токен: `POST https://api.avito.ru/token`
-- Фид последней выгрузки: `…/autoload/v2/reports/last_completed_report` → `feed_url` (скачать с Bearer)
-- Все объявления: `GET /core/v1/items?status=active` и/или `active,old,blocked,rejected,removed`
-- Сохранять в `output/data/` и `output/feeds/`; секреты не писать в репозиторий
+Предпочитай скилл **`avito-api`**: `export_universal.py --mode autoload` из корня проекта, ключи в `avito_export/.env.local` (не в shell). См. [15-avito-api-export.md](references/15-avito-api-export.md).
 
 ---
 
@@ -254,15 +251,11 @@ Task Progress:
 
 ---
 
-## Пример: мебель, две категории, 2000 строк
+## Примеры
 
-> /avito-factory кухни и шкафы-купе отдельно, ~1000 каждого, модели в title, цены 100–100000, МСК+20км, докрути по парсингу
+**Товары, 2 категории, 2000 строк:** session → research per category → xlsx multi-sheet → `avito-photos`.
 
-1. Session + бриф  
-2. Research kitchens-moscow + wardrobes-moscow (или переиспользовать)  
-3. Чекпоинты ЦА/углов  
-4. Генерация xlsx: 1000+1000, модели, коридор+когорты, CTA из research  
-5. Отчёт + пути к `output/feeds/`
+**Услуги, 50 строк, одна категория:** [16-services-xlsx.md](references/16-services-xlsx.md) → clusters title → PriceList → `avito-photos` (режим uslugi) → `основной-{slug}-with-photos.xlsx`.
 
 ---
 
