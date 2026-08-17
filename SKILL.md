@@ -72,7 +72,7 @@ scripts/         ← генераторы
 
 ```
 0 Intake → [0.5 Research] → 1 ЦА → 2 Креативы → 3 Объявления
-  → 4 Аудит → 5 Спинтекст → 6 Масштаб → 7 CSV/XLSX → [8 Фото]
+  → 4 Аудит → 5 Спинтекст → 6 Масштаб → 7 CSV/XLSX → [7.5 Clean] → [8 Фото]
 ```
 
 | Этап | Что делать | Reference |
@@ -86,7 +86,8 @@ scripts/         ← генераторы
 | 5 | Спинтекст | [07-spintax.md](references/07-spintax.md) |
 | 6 | Масштаб + уникализация | [14-uniquification.md](references/14-uniquification.md) |
 | 7 | CSV и/или XLSX автозагрузки | [08-csv-export.md](references/08-csv-export.md) + [13-autoload-xlsx.md](references/13-autoload-xlsx.md) + **услуги:** [16-services-xlsx.md](references/16-services-xlsx.md) |
-| 8 | Фото | [09-image-reverse.md](references/09-image-reverse.md) |
+| 7.5 | **Clean feed** — убрать чужие листы, уплотнить строки | [17-feed-clean.md](references/17-feed-clean.md) |
+| 8 | Фото | [09-image-reverse.md](references/09-image-reverse.md) + скилл **`avito-photos`** |
 | — | Выгрузка объявлений через API | [15-avito-api-export.md](references/15-avito-api-export.md) |
 | — | Экспорт переписки | [10-chat-export-brief.md](references/10-chat-export-brief.md) |
 | — | Татарстан 200 | [11-tatarstan-geo-preset.md](references/11-tatarstan-geo-preset.md) |
@@ -106,6 +107,9 @@ scripts/         ← генераторы
 - Телефон, бренд в карточке, оставлять ли старые AvitoId
 - Нужен ли парсинг конкурентов (этап 0.5)
 - `client_id` / `client_secret` Авито API — только для выгрузки/отчётов, **не коммитить в git**
+- **Excluded themes** — что **не** включать (сезонная отчётность, аренда, закрытие организаций…)
+- **Lock на активных:** Address, Category, AvitoId, Title; опционально ImageUrls — не менять без явного запроса
+- Stats/API: при масштабе — winners-matrix из **`avito-api`** (контакты, активные темы)
 - Цены: коридор из research (₽/п.м., «за услугу», фикс. сумма) **и/или** когортный разброс
 - Гео: список адресов или правило (напр. Москва + ~20 км МКАД)
 
@@ -194,6 +198,21 @@ scripts/         ← генераторы
 
 ---
 
+## Этап 7.5: Clean feed (обязательно перед автозагрузкой)
+
+Прочитай [17-feed-clean.md](references/17-feed-clean.md).
+
+Если xlsx собран из **старого полного выгруза** аккаунта:
+
+1. **Удалить листы** чужих категорий (аренда, товары не из брифа…) — оставить только целевые + `Инструкция` + `Спр-*`
+2. **Уплотнить строки** на каждом data-листе: header (1–4) + только строки с непустым Title (после scale часто остаются NA-дыры на 1000+ строк)
+3. Бэкап → `output/backups/…-before-clean-{date}.xlsx`
+4. Отчёт → `output/reports/feed-clean-report.json`
+
+Скрипт-шаблон: `scripts/clean_autoload_feed.py` (настрой `KEEP_PREFIXES` / `DROP_SHEETS` под проект).
+
+---
+
 ## Этап 8: Фото (опционально)
 
 [09-image-reverse.md](references/09-image-reverse.md).
@@ -242,6 +261,8 @@ Task Progress:
 - [ ] 3–4 базы прошли аудит
 - [ ] Спинтекст / генератор масштаба готов
 - [ ] CSV и/или XLSX: нужное N, отдельные листы категорий
+- [ ] **Clean feed:** нет чужих листов; строки уплотнены; только целевые категории
+- [ ] Excluded themes не попали в title/фото
 - [ ] Цены: коридор рынка + когортные хвосты (если просили)
 - [ ] Адреса разнообразны по гео-правилу
 - [ ] Модельные имена / антидетект
