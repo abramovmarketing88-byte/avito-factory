@@ -27,8 +27,9 @@ Id, ListingFee/Package, AvitoId, ManagerName, ContactPhone, Title, Description, 
 
 ## Правила заполнения
 
-- **Новые** объявления: AvitoId пустой; Id = стабильный uid (`al-k-1000`)
-- **Старые** (если обновляем): не менять категорию и адрес без запроса; AvitoId сохранить
+- **Новые** объявления: AvitoId **пустой**; Id = новый уникальный uid (`n-mkp-001`, `n-gen-001`…)
+- **Активные** (из выгрузки автозагрузки): **не менять** Id и AvitoId
+- Merge: база = файл только с активными + append новых → `scripts/merge_active_and_new_feed.py`
 - После **scale до N строк:** не оставлять xlsx с пустыми NA-строками между объявлениями — см. [17-feed-clean.md](17-feed-clean.md) (compact)
 - **Clean feed:** удалить листы чужих категорий (аренда, товары вне брифа) перед автозагрузкой
 - Description: HTML `<p>…</p>`, длина по брифу (часто 300–400 plain)

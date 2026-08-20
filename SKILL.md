@@ -85,7 +85,7 @@ scripts/         ← генераторы
 | 4 | Аудит 12 уровней | [06-audit-fix.md](references/06-audit-fix.md) |
 | 5 | Спинтекст | [07-spintax.md](references/07-spintax.md) |
 | 6 | Масштаб + уникализация | [14-uniquification.md](references/14-uniquification.md) |
-| 7 | CSV и/или XLSX автозагрузки | [08-csv-export.md](references/08-csv-export.md) + [13-autoload-xlsx.md](references/13-autoload-xlsx.md) + **услуги:** [16-services-xlsx.md](references/16-services-xlsx.md) |
+| 7 | CSV и/или XLSX автозагрузки | [08-csv-export.md](references/08-csv-export.md) + [13-autoload-xlsx.md](references/13-autoload-xlsx.md) + **услуги:** [16-services-xlsx.md](references/16-services-xlsx.md) + **правила Id/AvitoId:** [18-autoload-rules-ru.md](references/18-autoload-rules-ru.md) |
 | 7.5 | **Clean feed** — убрать чужие листы, уплотнить строки | [17-feed-clean.md](references/17-feed-clean.md) |
 | 8 | Фото | [09-image-reverse.md](references/09-image-reverse.md) + скилл **`avito-photos`** |
 | — | Выгрузка объявлений через API | [15-avito-api-export.md](references/15-avito-api-export.md) |
