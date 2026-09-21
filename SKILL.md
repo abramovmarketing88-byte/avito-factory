@@ -108,7 +108,8 @@ scripts/         ← генераторы
 - Нужен ли парсинг конкурентов (этап 0.5)
 - `client_id` / `client_secret` Авито API — только для выгрузки/отчётов, **не коммитить в git**
 - **Excluded themes** — что **не** включать (сезонная отчётность, аренда, закрытие организаций…)
-- **Lock на активных:** Address, Category, AvitoId, Title; опционально ImageUrls — не менять без явного запроса
+- **Lock на активных:** Address, Category, AvitoId, Title; опционально ImageUrls/ImageNames — не менять без явного запроса
+- Способ фото: **ImageUrls (Яндекс.Диск)** vs **архив ZIP + ImageNames** (≤100 МБ с Excel) — см. `avito-photos` F
 - Stats/API: при масштабе — winners-matrix из **`avito-api`** (контакты, активные темы)
 - Цены: коридор из research (₽/п.м., «за услугу», фикс. сумма) **и/или** когортный разброс
 - Гео: список адресов или правило (напр. Москва + ~20 км МКАД)
@@ -215,9 +216,18 @@ scripts/         ← генераторы
 
 ## Этап 8: Фото (опционально)
 
-[09-image-reverse.md](references/09-image-reverse.md).
+[09-image-reverse.md](references/09-image-reverse.md) + скилл **`avito-photos`**.
 
 Из research: hero + ценник полной суммы проекта на фото; 5+ кадров; живой кадр / детали / цвета.
+
+Способ доставки в автозагрузку (зафиксировать в брифе/session):
+
+| Способ | Когда | Куда в Excel |
+|--------|-------|--------------|
+| **ImageUrls** (Яндекс.Диск) | Дефолт; массовый фид | URL; ImageNames пусто |
+| **Архив ZIP + ImageNames** | Явный запрос / нет Диска; малый пакет | Имена файлов; ImageUrls пусто; ZIP+xlsx ≤100 МБ |
+
+Правила архива: `avito-photos` режим **F** / `references/archive-upload.md`. Сводка: [18-autoload-rules-ru.md](references/18-autoload-rules-ru.md).
 
 ---
 

@@ -37,12 +37,30 @@
 3. Активным — Id + AvitoId из выгрузки; новым — свежий Id, AvitoId пустой
 4. Скрипт: `scripts/merge_active_and_new_feed.py`
 
-## Фото (ImageUrls)
+## Фото
+
+Два способа Авито (не смешивать в одной строке):
+
+### ImageUrls (дефолт пайплайна)
 
 - HTTP/HTTPS или **приватная ссылка Яндекс.Диска** (cloud-api)
-- До **10** фото на объявление: `url1 | url2 | …`
+- До **10** фото: `url1 | url2 | …`
 - Если указан **ImageUrls** → **ImageNames пусто**
-- Архив + ImageNames — только при ручной загрузке с ZIP
+- Детали: скилл **`avito-photos`**, режимы A/C/D
+
+### Архив + ImageNames (режим F)
+
+По инструкции Авито:
+
+1. Подготовить фото; продумать **названия или нумерацию**
+2. Сложить в архив: **без папки и без разбиения по папкам внутри** (плоский ZIP)
+3. В **ImageNames** — имя с расширением, напр. `Фото_1.jpg`; несколько — `|` или перевод строки (` | ` в пайплайне)
+4. Загрузить **архив вместе с Excel**
+5. **Архив + Excel ≤ 100 МБ**
+
+- ImageUrls при этом **пусто**
+- Полные правила: скилл **`avito-photos`**, режим **F**, файл `references/archive-upload.md`
+- Массовые фиды обычно не влезают в 100 МБ → оставаться на ImageUrls
 
 ## Услуги — обязательные поля (бухгалтерия)
 
@@ -99,4 +117,4 @@
 | Clean | [17-feed-clean.md](17-feed-clean.md), `clean_autoload_feed.py` |
 | Merge active + new | `merge_active_and_new_feed.py` |
 | Гео MSK…MSK+2 | `fix_geo_addresses.py`, `build_geo_pool.py` |
-| Фото | `avito-photos`, `services-photos.md` |
+| Фото | `avito-photos` (URL A/C/D или архив F), `services-photos.md`; архив — `avito-photos/references/archive-upload.md` |
