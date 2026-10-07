@@ -4,9 +4,10 @@ description: >-
   Полный пайплайн массовых объявлений для Авито (любая ниша): бриф → (опц.)
   парсинг выдачи → ЦА → title/офферы → объявления → аудит → спинтекст → CSV
   и/или XLSX автозагрузки. Товары и услуги, multi-category, когортные цены,
-  гео по брифу, Avito API. Use when avito factory, /avito-factory, автозагрузка
+  гео по брифу, Avito API. Услуги: PriceList словарь + ServiceName (не «Своя
+  услуга» free-text). Use when avito factory, /avito-factory, автозагрузка
   Авито, массовая генерация объявлений, спинтекст, CSV/XLSX, services feed,
-  PriceList, 50/200/1000 объявлений.
+  PriceList, ServiceName, Услуга Авито, 50/200/1000 объявлений.
 disable-model-invocation: true
 ---
 
@@ -85,7 +86,7 @@ scripts/         ← генераторы
 | 4 | Аудит 12 уровней | [06-audit-fix.md](references/06-audit-fix.md) |
 | 5 | Спинтекст | [07-spintax.md](references/07-spintax.md) |
 | 6 | Масштаб + уникализация | [14-uniquification.md](references/14-uniquification.md) |
-| 7 | CSV и/или XLSX автозагрузки | [08-csv-export.md](references/08-csv-export.md) + [13-autoload-xlsx.md](references/13-autoload-xlsx.md) + **услуги:** [16-services-xlsx.md](references/16-services-xlsx.md) + **правила Id/AvitoId:** [18-autoload-rules-ru.md](references/18-autoload-rules-ru.md) |
+| 7 | CSV и/или XLSX автозагрузки | [08-csv-export.md](references/08-csv-export.md) + [13-autoload-xlsx.md](references/13-autoload-xlsx.md) + **услуги:** [16-services-xlsx.md](references/16-services-xlsx.md) + **PriceList/ServiceName:** [19-pricelist-services.md](references/19-pricelist-services.md) + **правила Id/AvitoId:** [18-autoload-rules-ru.md](references/18-autoload-rules-ru.md) |
 | 7.5 | **Clean feed** — убрать чужие листы, уплотнить строки | [17-feed-clean.md](references/17-feed-clean.md) |
 | 8 | Фото | [09-image-reverse.md](references/09-image-reverse.md) + скилл **`avito-photos`** |
 | — | Выгрузка объявлений через API | [15-avito-api-export.md](references/15-avito-api-export.md) |
@@ -101,6 +102,7 @@ scripts/         ← генераторы
 Дополнительно спроси / зафиксируй (пакетно):
 - Категории Авито **отдельно** (кластеры title / листы xlsx) и целевое N на каждую
 - **Товары vs услуги** — шаблон xlsx и PriceList (услуги)
+- Для **услуг / PriceList** (если нет в брифе — спросить): прайс клиента; эталон с активного; N позиций (дефолт ~10); ServiceName-lead по кластерам → [19-pricelist-services.md](references/19-pricelist-services.md)
 - Формат выдачи: CSV / **XLSX автозагрузки** / оба
 - Длина Description (часто **300–400** символов plain)
 - Антидетект vs соседний аккаунт (запрещённые фразы/эмодзи-шапки)
@@ -108,13 +110,14 @@ scripts/         ← генераторы
 - Нужен ли парсинг конкурентов (этап 0.5)
 - `client_id` / `client_secret` Авито API — только для выгрузки/отчётов, **не коммитить в git**
 - **Excluded themes** — что **не** включать (сезонная отчётность, аренда, закрытие организаций…)
-- **Lock на активных:** Address, Category, AvitoId, Title; опционально ImageUrls/ImageNames — не менять без явного запроса
+- **Lock на активных:** Address, Category, AvitoId, Title; опционально ImageUrls/ImageNames/PriceList — не менять без явного запроса
 - Способ фото: **ImageUrls (Яндекс.Диск)** vs **архив ZIP + ImageNames** (≤100 МБ с Excel) — см. `avito-photos` F
 - Stats/API: при масштабе — winners-matrix из **`avito-api`** (контакты, активные темы)
 - Цены: коридор из research (₽/п.м., «за услугу», фикс. сумма) **и/или** когортный разброс
 - Гео: список адресов или правило (напр. Москва + ~20 км МКАД)
 
-Не начинай этап 1 без: услуга, регион, количество (или сплит по категориям).
+Не начинай этап 1 без: услуга, регион, количество (или сплит по категориям).  
+Для услуг не пиши PriceList без прайса/эталона — уточни ([19-pricelist-services.md](references/19-pricelist-services.md)).
 
 ---
 
@@ -278,15 +281,15 @@ Task Progress:
 - [ ] Модельные имена / антидетект
 - [ ] Description в заданном диапазоне длины
 - [ ] Факты не искажены; секреты API не в git
+- [ ] **Услуги:** PriceList = словарь `Имя||цена|Да|за услугу`; 1-я строка = ServiceName; нет `Своя услуга|…` без approve ([19-pricelist-services.md](references/19-pricelist-services.md))
 ```
-
 ---
 
 ## Примеры
 
 **Товары, 2 категории, 2000 строк:** session → research per category → xlsx multi-sheet → `avito-photos`.
 
-**Услуги, 50 строк, одна категория:** [16-services-xlsx.md](references/16-services-xlsx.md) → clusters title → PriceList → `avito-photos` (режим uslugi) → `основной-{slug}-with-photos.xlsx`.
+**Услуги, 50 строк, одна категория:** [16-services-xlsx.md](references/16-services-xlsx.md) → [19-pricelist-services.md](references/19-pricelist-services.md) → clusters title → PriceList → `avito-photos` (режим uslugi) → `основной-{slug}-with-photos.xlsx`.
 
 ---
 
@@ -294,3 +297,4 @@ Task Progress:
 
 - CSV: [templates/csv-header.csv](templates/csv-header.csv), [templates/avito-bulk-upload-example.csv](templates/avito-bulk-upload-example.csv)
 - Session: [templates/session-state.md](templates/session-state.md)
+- PriceList услуг: [references/19-pricelist-services.md](references/19-pricelist-services.md)

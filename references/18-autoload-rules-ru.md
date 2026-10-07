@@ -71,7 +71,12 @@
 - `Description` ≤7500, HTML `<p><ul><li>…` по тарифу
 - `Address` — полный адрес до 256 символов
 - `Place`, `Consultations`, `WorkWithContract`, `Prepayment` — обязательны
-- `PriceList` — рекомендуется (до 50 услуг в ячейке, построчно в Excel)
+- `PriceList` — см. [19-pricelist-services.md](19-pricelist-services.md):
+  - формат словаря: `Аутсорсинг бухгалтерских услуг||3900|Да|за услугу`
+  - **1-я строка = Услуга / ServiceName** (имя из справочника Авито)
+  - **не** `Своя услуга|свободный текст|…` (ошибка «не условий работы»)
+  - дефолт ~**10** позиций из прайса клиента; до 50 по лимиту Авито
+  - нет прайса / эталона с активного — **уточнить у пользователя**
 
 ## ListingFee
 
@@ -114,6 +119,7 @@
 | Задача | Документ / скрипт |
 |--------|-------------------|
 | Услуги xlsx | [16-services-xlsx.md](16-services-xlsx.md) |
+| PriceList / ServiceName | [19-pricelist-services.md](19-pricelist-services.md) |
 | Clean | [17-feed-clean.md](17-feed-clean.md), `clean_autoload_feed.py` |
 | Merge active + new | `merge_active_and_new_feed.py` |
 | Гео MSK…MSK+2 | `fix_geo_addresses.py`, `build_geo_pool.py` |
