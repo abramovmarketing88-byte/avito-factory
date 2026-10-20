@@ -86,7 +86,7 @@ scripts/         ← генераторы
 | 4 | Аудит 12 уровней | [06-audit-fix.md](references/06-audit-fix.md) |
 | 5 | Спинтекст | [07-spintax.md](references/07-spintax.md) |
 | 6 | Масштаб + уникализация | [14-uniquification.md](references/14-uniquification.md) |
-| 7 | CSV и/или XLSX автозагрузки | [08-csv-export.md](references/08-csv-export.md) + [13-autoload-xlsx.md](references/13-autoload-xlsx.md) + **услуги:** [16-services-xlsx.md](references/16-services-xlsx.md) + **PriceList/ServiceName:** [19-pricelist-services.md](references/19-pricelist-services.md) + **правила Id/AvitoId:** [18-autoload-rules-ru.md](references/18-autoload-rules-ru.md) |
+| 7 | CSV и/или XLSX автозагрузки | [08-csv-export.md](references/08-csv-export.md) + [13-autoload-xlsx.md](references/13-autoload-xlsx.md) + **услуги:** [16-services-xlsx.md](references/16-services-xlsx.md) + **PriceList/ServiceName:** [19-pricelist-services.md](references/19-pricelist-services.md) + **правила Id/AvitoId:** [18-autoload-rules-ru.md](references/18-autoload-rules-ru.md) + **база Авито (категории):** [autoload-kb/00-index.md](references/autoload-kb/00-index.md) |
 | 7.5 | **Clean feed** — убрать чужие листы, уплотнить строки | [17-feed-clean.md](references/17-feed-clean.md) |
 | 8 | Фото | [09-image-reverse.md](references/09-image-reverse.md) + скилл **`avito-photos`** |
 | — | Выгрузка объявлений через API | [15-avito-api-export.md](references/15-avito-api-export.md) |
@@ -197,6 +197,7 @@ scripts/         ← генераторы
 
 - CSV: [08-csv-export.md](references/08-csv-export.md)
 - XLSX: [13-autoload-xlsx.md](references/13-autoload-xlsx.md) — данные с **5-й строки**; маппинг колонок по **row 2** шаблона; услуги → [16-services-xlsx.md](references/16-services-xlsx.md); статус/телефон/компания из брифа
+- **База автозагрузки Авито (срез 19.10.2026):** перед заполнением листа открой [autoload-kb/00-index.md](references/autoload-kb/00-index.md) → шаблон категории по ID в `templates/` (обязательные поля, enums). Инструкция/FAQ/общие параметры: [01-instruction.md](references/autoload-kb/01-instruction.md), [02-faq.md](references/autoload-kb/02-faq.md), [04-common-params.md](references/autoload-kb/04-common-params.md). Каталог 3029 категорий: `data/categories-3029.csv`. Операционные правила: [18-autoload-rules-ru.md](references/18-autoload-rules-ru.md).
 
 Перед выдачей сверь фид с research/canvas (title-формула, дыры, CTA, коридор цен).
 
@@ -297,4 +298,5 @@ Task Progress:
 
 - CSV: [templates/csv-header.csv](templates/csv-header.csv), [templates/avito-bulk-upload-example.csv](templates/avito-bulk-upload-example.csv)
 - Session: [templates/session-state.md](templates/session-state.md)
+- Автозагрузка KB: [references/autoload-kb/00-index.md](references/autoload-kb/00-index.md), [SOURCE.md](references/autoload-kb/SOURCE.md)
 - PriceList услуг: [references/19-pricelist-services.md](references/19-pricelist-services.md)
